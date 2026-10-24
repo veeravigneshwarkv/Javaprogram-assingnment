@@ -1,0 +1,73 @@
+package com.kec.academic;
+
+public class AggregateCalculator {
+
+    public static double calculateAggregate(
+            String courseType,
+            double ciaMarks,
+            double eseMarks) {
+
+        if (courseType == null || courseType.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Course type cannot be empty."
+            );
+        }
+
+        if (!Double.isFinite(ciaMarks)
+                || ciaMarks < 0
+                || ciaMarks > 100) {
+            throw new IllegalArgumentException(
+                    "CIA marks must be between 0 and 100."
+            );
+        }
+
+        courseType = courseType.trim().toUpperCase();
+
+        double ciaWeightage;
+        double eseWeightage;
+        double eseMaximum;
+
+        switch (courseType) {
+            case "THEORY":
+                ciaWeightage = 40;
+                eseWeightage = 60;
+                eseMaximum = 60;
+                break;
+
+            case "PRACTICAL":
+                ciaWeightage = 60;
+                eseWeightage = 40;
+                eseMaximum = 40;
+                break;
+
+            case "EMBEDDED":
+                ciaWeightage = 50;
+                eseWeightage = 50;
+                eseMaximum = 50;
+                break;
+
+            default:
+                throw new IllegalArgumentException(
+                        "Invalid course type: " + courseType
+                );
+        }
+
+        if (!Double.isFinite(eseMarks)
+                || eseMarks < 0
+                || eseMarks > eseMaximum) {
+            throw new IllegalArgumentException(
+                    "ESE marks must be between 0 and "
+                            + eseMaximum
+            );
+        }
+
+        double normalizedEse =
+                (eseMarks / eseMaximum) * 100;
+
+        double aggregate =
+                (ciaMarks * ciaWeightage / 100)
+                + (normalizedEse * eseWeightage / 100);
+
+        return Math.round(aggregate * 100.0) / 100.0;
+    }
+}
